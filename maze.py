@@ -14,7 +14,6 @@ class Generator:
 		history = [(x,y)]
 	
 		while history:
-			game.getNextFrame()
 			game.cells[x][y].visited = True
 			neighbors = []
 
@@ -49,7 +48,6 @@ class Generator:
 					y = y - 1
 			else:
 				x,y = history.pop()
-
 		return game.cells
 
 class Solver:
@@ -59,12 +57,13 @@ class Game:
 
 	def __init__(self):
 	
-		self.WINDOW_WIDTH = 800
-		self.WINDOW_HEIGHT = 800
-		self.NUM_SQUARES = 70
+		self.WINDOW_WIDTH = 1000
+		self.WINDOW_HEIGHT = 1000
+		self.NUM_SQUARES = 200
 		self.BLOCK_SIZE = (self.WINDOW_WIDTH - 20) / self.NUM_SQUARES
 		self.WHITE  = (255,255,255)
 		self.BLACK = (0,0,0)
+		self.GREEN = (0,255,0)
 		self.cells = [[Cell(i,j) for j in range(self.NUM_SQUARES)] for i in range(self.NUM_SQUARES)]
 
 	def draw_board(self):
@@ -72,10 +71,15 @@ class Game:
 			for col in row:
 				walls, active = col.get_walls(self)
 				for i in range(len(walls)):
+					if not active[i]:
+						pygame.draw.line(self.window, self.BLACK, walls[i][0], walls[i][1])
+
+		for row in self.cells:
+			for col in row:
+				walls, active = col.get_walls(self)
+				for i in range(len(walls)):
 					if active[i]:
 						pygame.draw.line(self.window, self.WHITE, walls[i][0], walls[i][1])
-					else:
-						pygame.draw.line(self.window, self.BLACK, walls[i][0], walls[i][1])
 
 
 	def getPresentFrame(self):
@@ -102,8 +106,8 @@ class Game:
 		randy = random.randint(0, self.NUM_SQUARES - 1)
 		self.cells[0][0].top = False
 		self.cells[self.NUM_SQUARES - 1][self.NUM_SQUARES - 1].bot = False
-
 		self.cells = self.gen.dfs(self, randx,randy)
+		self.getNextFrame()
 		while running:
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
