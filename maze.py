@@ -13,47 +13,47 @@ class Generator:
 		game.getNextFrame()
 		if game.cells[x][y].visited: return game.cells
 		game.cells[x][y].visited = True
-		
-		num_neighbors = 4
 
-		while num_neighbors != 0:
-		
-			r = random.randint(0,3)
-			
-			if  r == 0:
-				if x + 1 <= game.NUM_SQUARES - 1:
-					if not game.cells[x+1][y].visited:
-						game.cells[x+1][y].left = False
-						game.cells[x][y].right = False
-						game.cells = self.dfs(game, x + 1, y)
-			if  r == 1:
-				if x - 1 >= 0:
-					if not game.cells[x-1][y].visited:
-						game.cells[x-1][y].right = False
-						game.cells[x][y].left = False
-						game.cells = self.dfs(game, x - 1, y)
-			if  r == 2:
-				if y + 1 <= game.NUM_SQUARES - 1:
-					if not game.cells[x][y+1].visited:
-						game.cells[x][y+1].top = False
-						game.cells[x][y].bot = False
-						game.cells = self.dfs(game, x, y+1)
-			if  r == 3:
-				if y - 1 >= 0:
-					if not game.cells[x][y-1].visited:
-						game.cells[x][y-1].bot = False
-						game.cells[x][y].top = False
-						game.cells = self.dfs(game, x, y-1)
-				
-			num_neighbors = 0
-			if x + 1 <= game.NUM_SQUARES - 1:
-				if not game.cells[x+1][y].visited: num_neighbors += 1
-			if x - 1 >= 0:
-				if not game.cells[x-1][y].visited: num_neighbors += 1
-			if y + 1 <= game.NUM_SQUARES - 1:
-				if not game.cells[x][y+1].visited: num_neighbors += 1
-			if y - 1 >= 0:
-				if not game.cells[x][y-1].visited: num_neighbors += 1
+		neighbors = []
+
+		if x + 1 <= game.NUM_SQUARES - 1:
+			if not game.cells[x+1][y].visited: neighbors.append((x+1,y))
+		if x - 1 >= 0:
+			if not game.cells[x-1][y].visited: neighbors.append((x-1,y))
+		if y + 1 <= game.NUM_SQUARES - 1:
+			if not game.cells[x][y+1].visited: neighbors.append((x,y+1))
+		if y - 1 >= 0:
+			if not game.cells[x][y-1].visited: neighbors.append((x,y-1))
+
+		while len(neighbors) > 0:
+			if neighbors:
+				rand = random.randint(0, len(neighbors) - 1)
+				r = neighbors[rand]
+				neighbors.pop(rand)
+				if  r[0] == x + 1:
+					if x + 1 <= game.NUM_SQUARES - 1:
+						if not game.cells[x+1][y].visited:
+							game.cells[x+1][y].left = False
+							game.cells[x][y].right = False
+							game.cells = self.dfs(game, x + 1, y)
+				if  r[0] == x - 1:
+					if x - 1 >= 0:
+						if not game.cells[x-1][y].visited:
+							game.cells[x-1][y].right = False
+							game.cells[x][y].left = False
+							game.cells = self.dfs(game, x - 1, y)
+				if  r[1] == y + 1:
+					if y + 1 <= game.NUM_SQUARES - 1:
+						if not game.cells[x][y+1].visited:
+							game.cells[x][y+1].top = False
+							game.cells[x][y].bot = False
+							game.cells = self.dfs(game, x, y+1)
+				if  r[1] == y - 1:
+					if y - 1 >= 0:
+						if not game.cells[x][y-1].visited:
+							game.cells[x][y-1].bot = False
+							game.cells[x][y].top = False
+							game.cells = self.dfs(game, x, y-1)
 		return game.cells
 			
 class Game:
@@ -63,7 +63,7 @@ class Game:
 		self.WINDOW_WIDTH = 800
 		self.WINDOW_HEIGHT = 800
 		self.NUM_SQUARES = 30
-		self.BLOCK_SIZE = (self.WINDOW_WIDTH - 5) / self.NUM_SQUARES
+		self.BLOCK_SIZE = (self.WINDOW_WIDTH - 20) / self.NUM_SQUARES
 		self.WHITE  = (255,255,255)
 		self.BLACK = (0,0,0)
 		self.cells = [[Cell(i,j) for j in range(self.NUM_SQUARES)] for i in range(self.NUM_SQUARES)]
