@@ -52,14 +52,15 @@ class Generator:
 
 class Solver:
 	pass
-			
+
+	
 class Game:
 
 	def __init__(self):
 	
 		self.WINDOW_WIDTH = 1000
 		self.WINDOW_HEIGHT = 1000
-		self.NUM_SQUARES = 200
+		self.NUM_SQUARES = 100
 		self.BLOCK_SIZE = (self.WINDOW_WIDTH - 20) / self.NUM_SQUARES
 		self.WHITE  = (255,255,255)
 		self.BLACK = (0,0,0)
