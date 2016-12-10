@@ -63,7 +63,7 @@ class Game:
 		self.WINDOW_WIDTH = 800
 		self.WINDOW_HEIGHT = 800
 		self.NUM_SQUARES = 30
-		self.BLOCK_SIZE = self.WINDOW_WIDTH / self.NUM_SQUARES
+		self.BLOCK_SIZE = (self.WINDOW_WIDTH - 5) / self.NUM_SQUARES
 		self.WHITE  = (255,255,255)
 		self.BLACK = (0,0,0)
 		self.cells = [[Cell(i,j) for j in range(self.NUM_SQUARES)] for i in range(self.NUM_SQUARES)]
@@ -99,6 +99,9 @@ class Game:
 		self.getPresentFrame()
 		running = True
 		self.gen = Generator()
+		self.cells[0][0].top = False
+		self.cells[self.NUM_SQUARES - 1][self.NUM_SQUARES - 1].bot = False
+
 		self.cells = self.gen.dfs(self, 0,0)
 		while running:
 			for event in pygame.event.get():
